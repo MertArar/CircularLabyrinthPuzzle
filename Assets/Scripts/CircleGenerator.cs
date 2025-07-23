@@ -15,7 +15,7 @@ public class CircleGenerator : MonoBehaviour
     public float baseConnectionRate = 0.25f;
 
     private List<List<bool>> mazeGrid = new List<List<bool>>();
-    private GameObject mazeParent;  // önemli değişiklik
+    private GameObject mazeParent; 
 
     public void GenerateLevel(int level)
     {
