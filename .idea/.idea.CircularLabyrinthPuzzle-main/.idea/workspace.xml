@@ -12,6 +12,7 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/ExitDetector.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/ExitTrigger.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/LevelManager.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectColorInfo">{
@@ -90,6 +91,9 @@
       <workItem from="1753148752018" duration="4191000" />
       <workItem from="1753235258979" duration="3413000" />
       <workItem from="1753239384662" duration="10000" />
+      <workItem from="1753291849988" duration="2153000" />
+      <workItem from="1753489203947" duration="3143000" />
+      <workItem from="1754269227650" duration="3226000" />
     </task>
     <servers />
   </component>

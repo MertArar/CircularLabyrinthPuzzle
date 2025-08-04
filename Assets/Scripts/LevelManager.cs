@@ -43,6 +43,15 @@ public class LevelManager : MonoBehaviour
     void ResetPlayerPosition()
     {
         if (player)
+        {
             player.transform.position = Vector3.zero;
+
+            Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
+            if (rb != null)
+            {
+                rb.velocity = Vector2.zero;
+                rb.angularVelocity = 0f;
+            }
+        }
     }
 }

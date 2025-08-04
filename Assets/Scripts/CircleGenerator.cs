@@ -15,14 +15,14 @@ public class CircleGenerator : MonoBehaviour
     public float baseConnectionRate = 0.25f;
 
     private List<List<bool>> mazeGrid = new List<List<bool>>();
-    private GameObject mazeParent; 
+    private GameObject mazeParent;
 
     public void GenerateLevel(int level)
     {
         currentLevel = level;
         Random.InitState(level);
 
-        int layerCount = baseLayers + level / 3;
+        int layerCount = Mathf.Min(baseLayers + level / 3, 5);
         int segmentsStart = baseSegments + (level / 2);
         float connectionRate = Mathf.Max(0.05f, baseConnectionRate - (level * 0.01f));
 
@@ -33,7 +33,9 @@ public class CircleGenerator : MonoBehaviour
 
         GenerateMazeGrid(layerCount, segmentsStart, connectionRate);
         GenerateMazeVisual(layerCount);
+        CreateExitTrigger(layerCount);
     }
+
 
     void GenerateMazeGrid(int layerCount, int segmentsStart, float connectionRate)
     {
@@ -61,13 +63,31 @@ public class CircleGenerator : MonoBehaviour
     {
         int segments = mazeGrid[layerIndex].Count;
         HashSet<int> opened = new HashSet<int>();
+
         while (opened.Count < openingCount)
         {
             int index = Random.Range(0, segments);
-            if (!opened.Contains(index))
+
+            int openingWidth = Mathf.Clamp(segments / 16, 2, 6);
+
+            bool overlap = false;
+            for (int i = 0; i < openingWidth; i++)
             {
-                mazeGrid[layerIndex][index] = false;
-                opened.Add(index);
+                int segIndex = (index + i) % segments;
+                if (opened.Contains(segIndex))
+                {
+                    overlap = true;
+                    break;
+                }
+            }
+
+            if (overlap) continue;
+
+            for (int i = 0; i < openingWidth; i++)
+            {
+                int segIndex = (index + i) % segments;
+                mazeGrid[layerIndex][segIndex] = false;
+                opened.Add(segIndex);
             }
         }
     }
@@ -112,7 +132,7 @@ public class CircleGenerator : MonoBehaviour
     void CreateArcSegment(float radius, float startAngle, float endAngle)
     {
         GameObject go = new GameObject("ArcSegment");
-        go.transform.parent = mazeParent.transform;  // önemli
+        go.transform.parent = mazeParent.transform;
         go.transform.localPosition = Vector3.zero;
 
         LineRenderer lr = go.AddComponent<LineRenderer>();
@@ -138,5 +158,19 @@ public class CircleGenerator : MonoBehaviour
         for (int i = 0; i <= arcDetail; i++)
             colliderPoints[i] = positions[i];
         edge.points = colliderPoints;
+    }
+
+    void CreateExitTrigger(int layerCount)
+    {
+        float radius = (layerCount + 0.5f) * layerSpacing;
+        GameObject exitZone = new GameObject("ExitTrigger");
+        exitZone.transform.parent = mazeParent.transform;
+        exitZone.transform.localPosition = Vector3.zero;
+
+        CircleCollider2D collider = exitZone.AddComponent<CircleCollider2D>();
+        collider.isTrigger = true;
+        collider.radius = radius;
+
+        exitZone.AddComponent<ExitTrigger>();
     }
 }
